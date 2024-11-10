@@ -1,13 +1,26 @@
-import { ModeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const {userId} = await auth()
+  if (userId != null) {
+    redirect("/events");
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Button>Hello</Button>
-        <ModeToggle />
-      </main>
+    <div className="text-center container my-4 mx-auto">
+      <h1 className="text-3xl mb-4">Home Page</h1>
+      <div className="flex gap-2 justify-center">
+        <Button asChild>
+          <SignInButton />
+        </Button>
+        {/* <Button asChild> */}
+          <SignUpButton />
+        {/* </Button> */}
+        <UserButton />
+      </div>
     </div>
   );
 }
