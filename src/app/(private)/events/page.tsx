@@ -16,6 +16,9 @@ import {
 } from "@/components/ui/card";
 import { formatEventDescription } from "@/lib/formatter";
 import { CopyEventButton } from "@/components/CopyEventButton";
+import { cn } from "@/lib/utils";
+
+export const revalidate = 0
 
 export default async function EventsPage() {
   const { userId } = await auth();
@@ -82,8 +85,8 @@ function EventCard({
   clerkUserId,
 }: EventCardProps) {
   return (
-    <Card className="flex flex-col">
-      <CardHeader>
+    <Card className={cn("flex flex-col", !isActive && "border-secondary/50")}>
+      <CardHeader className={cn(!isActive && "opacity-50")}>
         <CardTitle>{name}</CardTitle>
         <CardDescription>
           {formatEventDescription(durationInMinutes)}
@@ -91,11 +94,14 @@ function EventCard({
       </CardHeader>
       {description && <CardContent>{description}</CardContent>}
       <CardFooter className="flex justify-end gap-2 mt-auto">
-        <CopyEventButton
+        {isActive && (
+         <CopyEventButton
           variant="outline"
           eventId={id}
           clerkUserId={clerkUserId}
         />
+      )
+      }
         <Button asChild>
           <Link href={`/events/${id}/edit`}>Edit</Link>
         </Button>
